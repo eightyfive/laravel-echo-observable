@@ -1,0 +1,25 @@
+{
+  "name": "echo-observable",
+  "version": "0.0.1",
+  "description": "RxJS enabled Laravel Echo",
+  "main": "src/index.js",
+  "scripts": {
+    "format:watch": "onchange 'src/**/*.js' -- prettier --write {{changed}}",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "rx",
+    "rxjs",
+    "echo",
+    "laravel"
+  ],
+  "author": "Benoit Sagols",
+  "license": "ISC",
+  "dependencies": {
+    "rxjs": "^6.3.3"
+  },
+  "devDependencies": {
+    "onchange": "^5.1.0",
+    "prettier": "^1.15.2"
+  }
+}
