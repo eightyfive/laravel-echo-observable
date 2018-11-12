@@ -1,7 +1,4 @@
 import Echo from "laravel-echo";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
-import { normalize } from "normalizr";
 //
 import PublicChannel from "./public-channel";
 import PrivateChannel from "./private-channel";
@@ -32,6 +29,8 @@ export default class EchoObservable {
       this.echo = new Echo(this.options);
     }
 
+    // FIXME: WTF ?
+    // At least give a stackoverflow reference of why doing that
     window.Echo = this.echo;
 
     return this.echo;
@@ -66,6 +65,7 @@ export default class EchoObservable {
   }
 
   async getSocketId() {
+    // TODO: Implement this method for other broadcasters than "pusher"
     return new Promise(resolve => {
       this.getEcho().connector.pusher.connection.bind("connected", () =>
         resolve(this.getEcho().socketId())
@@ -74,10 +74,4 @@ export default class EchoObservable {
   }
 
   leave = channelName => () => this.getEcho().leave(channelName);
-
-  normalize(channelEvent$, modelName, schema) {
-    return channelEvent$
-      .pipe(map(ev => (modelName ? ev[modelName] : ev)))
-      .pipe(map(data => (schema ? normalize(data, schema) : data)));
-  }
 }
