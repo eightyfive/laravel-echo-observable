@@ -16,6 +16,7 @@
   "author": "Benoit Sagols",
   "license": "ISC",
   "dependencies": {
+    "laravel-echo": "^1.4.1",
     "rxjs": "^6.3.3"
   },
   "devDependencies": {
