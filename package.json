@@ -1,5 +1,5 @@
 {
-  "name": "echo-observable",
+  "name": "laravel-echo-observable",
   "version": "0.0.1",
   "description": "RxJS enabled Laravel Echo",
   "main": "src/index.js",
