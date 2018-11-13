@@ -28,8 +28,8 @@ export default class PublicChannel {
     return this.events[eventName];
   }
 
-  whisper(eventName) {
-    this.channel.whisper(eventName);
+  whisper(eventName, data) {
+    this.channel.whisper(eventName, data);
   }
 
   listenForWhisper(eventName) {
