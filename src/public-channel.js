@@ -8,9 +8,16 @@ export default class PublicChannel {
   }
 
   listen(eventName) {
+    return this.getObservable(eventName, "listen");
+  }
+
+  getObservable(eventName, method = null) {
     if (!this.events[eventName]) {
       this.events[eventName] = Observable.create(observer => {
-        this.channel.listen(eventName, ev => observer.next(ev));
+        this.channel[method || eventName].apply(this, [
+          eventName,
+          ev => observer.next(ev)
+        ]);
 
         // observer.complete();
         // observer.error(err);
@@ -18,7 +25,14 @@ export default class PublicChannel {
         return this.unsubscribe;
       });
     }
-
     return this.events[eventName];
+  }
+
+  whisper(eventName) {
+    this.channel.whisper(eventName);
+  }
+
+  listenForWhisper(eventName) {
+    return this.getObservable(eventName, "listenForWhisper");
   }
 }
