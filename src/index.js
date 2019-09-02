@@ -73,5 +73,9 @@ export default class EchoObservable {
     });
   }
 
-  leave = channelName => () => this.getEcho().leave(channelName);
+  leave = channelName => () => {
+    this.getEcho().leave(channelName);
+
+    delete this.channels[channelName];
+  };
 }
