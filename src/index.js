@@ -57,7 +57,7 @@ export default class EchoObservable {
     if (!this.channels[channelName]) {
       this.channels[channelName] = new channelClassNames[channelType](
         this.getEcho()[channelType](channelName),
-        this.leave(channelName)
+        this.createUnsubscribe(channelName)
       );
     }
 
@@ -73,9 +73,11 @@ export default class EchoObservable {
     });
   }
 
-  leave = channelName => () => {
-    this.getEcho().leave(channelName);
+  leave = name => {
+    this.getEcho().leave(name);
 
-    delete this.channels[channelName];
+    delete this.channels[name];
   };
+
+  createUnsubscribe = name => () => this.leave(name);
 }
