@@ -73,11 +73,9 @@ export default class EchoObservable {
     });
   }
 
-  leave = name => {
+  createUnsubscribe = name => () => {
     this.getEcho().leave(name);
 
     delete this.channels[name];
   };
-
-  createUnsubscribe = name => () => this.leave(name);
 }

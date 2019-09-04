@@ -1,9 +1,9 @@
 import { Observable } from "rxjs";
 
 export default class PublicChannel {
-  constructor(channel, destroy) {
+  constructor(channel, unsubscribe) {
     this.channel = channel;
-    this.unsubscribe = destroy;
+    this.unsubscribe = unsubscribe;
     this.events = {};
   }
 
