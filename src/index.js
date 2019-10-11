@@ -1,15 +1,8 @@
 import Echo from "laravel-echo";
-//
+
 import PublicChannel from "./public-channel";
 import PrivateChannel from "./private-channel";
 import PresenceChannel from "./presence-channel";
-
-const defaultOptions = {
-  broadcaster: "pusher",
-  auth: {
-    headers: {}
-  }
-};
 
 const channelClassNames = {
   channel: PublicChannel,
@@ -18,45 +11,32 @@ const channelClassNames = {
 };
 
 export default class EchoObservable {
-  constructor(options) {
-    this.echo = null;
+  constructor(echo) {
+    this.echo = echo;
     this.channels = {};
-    this.options = Object.assign({}, defaultOptions, options);
   }
 
-  getEcho() {
-    if (this.echo === null) {
-      this.echo = new Echo(this.options);
-    }
-
-    // FIXME: WTF ?
-    // At least give a stackoverflow reference of why doing that
-    window.Echo = this.echo;
-
-    return this.echo;
+  setBearer(token) {
+    // https://github.com/laravel/echo/issues/26#issuecomment-370832818
+    this.echo.connector.options.auth.headers.Authorization = "Bearer " + token;
   }
 
-  setAccessToken(token) {
-    this.echo = null;
-    this.options.auth.headers["Authorization"] = `Bearer ${token}`;
+  channel(name) {
+    return this.getChannel("channel", name);
   }
 
-  public(channelName) {
-    return this.getChannel("channel", channelName);
+  private(name) {
+    return this.getChannel("private", name);
   }
 
-  private(channelName) {
-    return this.getChannel("private", channelName);
-  }
-
-  presence(channelName) {
-    return this.getChannel("join", channelName);
+  join(name) {
+    return this.getChannel("join", name);
   }
 
   getChannel(channelType, channelName) {
     if (!this.channels[channelName]) {
       this.channels[channelName] = new channelClassNames[channelType](
-        this.getEcho()[channelType](channelName),
+        this.echo[channelType](channelName),
         this.createUnsubscribe(channelName)
       );
     }
@@ -64,17 +44,8 @@ export default class EchoObservable {
     return this.channels[channelName];
   }
 
-  async getSocketId() {
-    // TODO: Implement this method for other broadcasters than "pusher"
-    return new Promise(resolve => {
-      this.getEcho().connector.pusher.connection.bind("connected", () =>
-        resolve(this.getEcho().socketId())
-      );
-    });
-  }
-
   createUnsubscribe = name => () => {
-    this.getEcho().leave(name);
+    this.echo.leave(name);
 
     delete this.channels[name];
   };
