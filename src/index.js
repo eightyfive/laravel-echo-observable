@@ -1,5 +1,3 @@
-import Echo from "laravel-echo";
-
 import PublicChannel from "./public-channel";
 import PrivateChannel from "./private-channel";
 import PresenceChannel from "./presence-channel";
