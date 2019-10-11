@@ -1,38 +1,30 @@
-import { fromEventPattern, Observable } from "rxjs";
+import { fromEventPattern } from "rxjs";
 
 export default class PublicChannel {
   constructor(channel, leave) {
     this.channel = channel;
     this.leave = leave;
-    this.events = {};
   }
 
-  listen$(eventName) {
-    return this.getObservable("listen", eventName);
+  listen$(event) {
+    return this.getObservable("listen", event);
   }
 
-  listenForWhisper$(eventName) {
-    return this.getObservable("listenForWhisper", eventName);
+  listenForWhisper$(event) {
+    return this.getObservable("listenForWhisper", event);
   }
 
-  whisper(eventName, data) {
-    this.channel.whisper(eventName, data);
+  whisper(...args) {
+    this.channel.whisper(...args);
   }
 
-  getObservable(method, eventName) {
-    if (!this.events[eventName]) {
-      const args = [handler];
-
-      if (eventName) {
-        args.unshift(eventName);
+  getObservable(method, event) {
+    return fromEventPattern(handler => {
+      if (event) {
+        this.channel[method](event, handler);
+      } else {
+        this.channel[method](handler);
       }
-
-      this.events[eventName] = fromEventPattern(
-        handler => this.channel[method](...args),
-        this.leave
-      );
-    }
-
-    return this.events[eventName];
+    }, this.leave);
   }
 }

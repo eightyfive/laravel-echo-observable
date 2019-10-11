@@ -31,20 +31,22 @@ export default class EchoObservable {
     return this.getChannel("join", name);
   }
 
-  getChannel(channelType, channelName) {
-    if (!this.channels[channelName]) {
-      this.channels[channelName] = new channelClassNames[channelType](
-        this.echo[channelType](channelName),
-        this.createUnsubscribe(channelName)
+  getChannel(method, name) {
+    if (!this.channels[name]) {
+      this.channels[name] = new channelClassNames[method](
+        this.echo[method](name),
+        this.createLeaveChannel(name)
       );
     }
 
-    return this.channels[channelName];
+    return this.channels[name];
   }
 
-  createUnsubscribe = name => () => {
-    this.echo.leave(name);
+  createLeaveChannel(name) {
+    return () => {
+      this.echo.leave(name);
 
-    delete this.channels[name];
-  };
+      delete this.channels[name];
+    };
+  }
 }
