@@ -19,6 +19,14 @@ export default class EchoObservable {
     this.echo.connector.options.auth.headers.Authorization = "Bearer " + token;
   }
 
+  async getSocketId() {
+    return new Promise(resolve =>
+      this.echo.connector.socket.on("connect", () =>
+        resolve(this.echo.socketId())
+      )
+    );
+  }
+
   channel(name) {
     return this.getChannel("channel", name);
   }
